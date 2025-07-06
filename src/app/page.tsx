@@ -1,5 +1,5 @@
 const Home = () => {
-  return <p>project</p>;
+  return <p>{process.env.TEST}</p>;
 };
 
 export default Home;
