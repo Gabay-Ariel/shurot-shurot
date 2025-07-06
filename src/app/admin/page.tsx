@@ -1,28 +1,22 @@
 "use client";
 
-import useSWRSignIn from "@/lib/hooks/useSWRSignIn";
+import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import useSWRSignIn from "@/lib/hooks/useSWRSignIn";
 
 const Page = () => {
-  useEffect(() => {
-    console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
-    console.log(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-  }, []);
   const { trigger, isMutating, error } = useSWRSignIn();
   const router = useRouter();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e: FormEvent) => {
     try {
+      e.preventDefault();
       await trigger({ email, password });
       router.push("/admin/home");
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   };
 
   return (
@@ -48,7 +42,11 @@ const Page = () => {
         <button type="submit" disabled={isMutating}>
           {isMutating ? "...מתחבר" : "התחבר"}
         </button>
-        {error && <p>{error.response.data.error}</p>}
+        {!!error?.response && (
+          <p style={{ color: "red", marginTop: "10px" }}>
+            {error?.response.data.message}
+          </p>
+        )}
       </form>
     </>
   );

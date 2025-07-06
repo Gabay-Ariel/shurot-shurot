@@ -1,32 +1,25 @@
-// app/api/auth/signin/route.ts
 import supabaseServerClient from "@/lib/clients/supabaseServerClient";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
-  try {
-    const { email, password } = await req.json();
-    const supabase = await supabaseServerClient();
-
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      return NextResponse.json(
-        { success: false, error: error.message },
-        { status: 400 }
-      );
-    }
-
-    return NextResponse.json({
-      success: true,
-      user: data.user,
-    });
-  } catch (error) {
+  const { email, password } = await req.json();
+  const supabase = await supabaseServerClient();
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+  if (error) {
     return NextResponse.json(
-      { success: false, error: `error login: ${error?.message}` },
-      { status: 500 }
+      {
+        message:
+          error.code === "invalid_credentials"
+            ? "שגיאה בניסיון ההתחברות, ודא שאימייל וסיסמא נכונים"
+            : "שגיאת תקשורת כללית עם השרתים",
+      },
+      { status: 400 }
     );
   }
+  return NextResponse.json({
+    data,
+  });
 };

@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import useSWRMutation from "swr/mutation";
-import { SignInArgs, SignInResult } from "../types/signin";
+import { SignInArgs, SignInResult } from "../types/signIn";
 
 const signInFetcher = async (
   url: string,
