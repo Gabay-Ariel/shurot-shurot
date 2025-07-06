@@ -2,9 +2,13 @@
 
 import useSWRSignIn from "@/lib/hooks/useSWRSignIn";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Page = () => {
+  useEffect(() => {
+    console.log(process.env.NEXT_PUBLIC_SUPABASE_URL);
+    console.log(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  }, []);
   const { trigger, isMutating, error } = useSWRSignIn();
   const router = useRouter();
 
