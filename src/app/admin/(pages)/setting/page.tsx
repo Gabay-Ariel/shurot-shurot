@@ -2,7 +2,6 @@
 
 import useSWRSignOut from "@/lib/hooks/useSWRSignOut";
 import { useRouter } from "next/navigation";
-import { FormEvent } from "react";
 
 const Page = () => {
   const { trigger, isMutating } = useSWRSignOut();
