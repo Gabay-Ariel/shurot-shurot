@@ -16,7 +16,9 @@ const Page = () => {
       e.preventDefault();
       await trigger({ email, password });
       router.push("/admin/home");
-    } catch {}
+    } catch (error) {
+      return error;
+    }
   };
 
   return (
