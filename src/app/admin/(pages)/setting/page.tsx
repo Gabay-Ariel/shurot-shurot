@@ -8,7 +8,7 @@ const Page = () => {
   const { trigger, isMutating } = useSWRSignOut();
   const router = useRouter();
 
-  const handleSignOut = async (e: FormEvent) => {
+  const handleSignOut = async () => {
     try {
       await trigger();
       router.replace("/admin");

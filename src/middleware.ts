@@ -12,7 +12,7 @@ const middleware = async (request: NextRequest) => {
       if (isAuth) {
         return NextResponse.next();
       } else return NextResponse.redirect(new URL("/admin", request.url));
-    } catch (error) {
+    } catch {
       return NextResponse.redirect(new URL("/admin", request.url));
     }
   }

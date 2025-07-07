@@ -18,7 +18,7 @@ const Layout = async ({ children }: Props) => {
       );
     }
     if (!isAuth) return redirect("/admin");
-  } catch (error) {
+  } catch {
     return redirect("/admin");
   }
 };
