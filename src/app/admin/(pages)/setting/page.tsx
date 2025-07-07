@@ -10,7 +10,6 @@ const Page = () => {
 
   const handleSignOut = async (e: FormEvent) => {
     try {
-      e.preventDefault();
       await trigger();
       router.replace("/admin");
     } catch (error) {
