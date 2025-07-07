@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
 
 const Page = () => {
-  const { trigger, error, isMutating } = useSWRSignOut();
+  const { trigger, isMutating } = useSWRSignOut();
   const router = useRouter();
 
   const handleSignOut = async (e: FormEvent) => {
