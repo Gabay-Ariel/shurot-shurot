@@ -14,6 +14,6 @@ const signInFetcher = async (
   return response.data;
 };
 
-const useSWRSignIn = () => useSWRMutation("/api/auth/signin", signInFetcher);
+const useSWRSignIn = () => useSWRMutation("/api/auth/signIn", signInFetcher);
 
 export default useSWRSignIn;
