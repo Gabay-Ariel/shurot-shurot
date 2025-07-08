@@ -1,11 +1,12 @@
 "use client";
 
+import InlineEdit from "@/lib/components/InlineEdit";
 import useAuthRedirect from "@/lib/hooks/useAuthRedirect";
 import useSWRSignOut from "@/lib/hooks/useSWRSignOut";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
-  useAuthRedirect();
+  const user = useAuthRedirect();
   const { trigger, isMutating } = useSWRSignOut();
   const router = useRouter();
 
@@ -25,6 +26,26 @@ const Page = () => {
       <button onClick={handleSignOut}>
         {isMutating ? "מתנתק..." : "התנתק"}
       </button>
+      {user && (
+        <>
+          <h2>פרופיל</h2>
+          <InlineEdit
+            label="שם פרטי"
+            defaultValue={user.user_metadata.first_name}
+            field="first_name"
+          />
+          <InlineEdit
+            label="שם משפחה"
+            defaultValue={user.user_metadata.last_name}
+            field="last_name"
+          />
+          <InlineEdit
+            label="טלפון"
+            defaultValue={user.user_metadata.phone_number}
+            field="phone_number"
+          />
+        </>
+      )}
     </div>
   );
 };
