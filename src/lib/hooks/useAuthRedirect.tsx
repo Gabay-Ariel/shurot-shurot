@@ -4,16 +4,18 @@ import supabaseBrowserClient from "../clients/supabaseBrowserClient";
 import { useRouter } from "next/navigation";
 
 const useAuthRedirect = () => {
-  const router = useRouter();
+  // const router = useRouter();
   const supabase = supabaseBrowserClient();
-  alert("EEE");
   (async () => {
     const {
       data: { user },
       // error,
     } = await supabase.auth.getUser();
     if (!user) {
-      router.replace("/admin");
+      // router.replace("/admin");
+      console.log("ffffffff");
+    } else {
+      console.log("####");
     }
   })();
 };
