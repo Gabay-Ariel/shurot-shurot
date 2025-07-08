@@ -14,9 +14,9 @@ export const useAuthRedirect = () => {
 
   useEffect(() => {
     try {
-      (async () => {
+      (() => {
         setTimeout(() => {
-          alert("!!");
+          alert("!&!");
         }, 2000);
 
         // const {
