@@ -1,7 +1,7 @@
 "use client";
 
 import supabaseBrowserClient from "../clients/supabaseBrowserClient";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation";
 
 const useAuthRedirect = () => {
   // const router = useRouter();
