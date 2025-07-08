@@ -7,20 +7,26 @@ import { useRouter } from "next/navigation";
 export const useAuthRedirect = () => {
   const router = useRouter();
   const supabase = supabaseBrowserClient();
-  if (!router) alert("router null");
-  if (!supabase) alert("supabase null");
+  if (router) alert(`router ${router}`);
+  if (supabase) alert(`supabase ${supabase}`);
+  if (!router) alert(`router null`);
+  if (!supabase) alert(`supabase null`);
 
   useEffect(() => {
     try {
       (async () => {
-        const {
-          data: { user },
-          // error,
-        } = await supabase.auth.getUser();
+        setTimeout(() => {
+          alert("!!");
+        }, 2000);
 
-        if (!user) {
-          router.replace("/admin");
-        }
+        // const {
+        //   data: { user },
+        //   // error,
+        // } = await supabase.auth.getUser();
+
+        // if (!user) {
+        //   router.replace("/admin");
+        // }
       })();
     } catch (error) {
       alert(`>>>>>>>>>>>>>>>>>>>>> ${error} `);
