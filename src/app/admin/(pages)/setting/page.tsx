@@ -19,7 +19,6 @@ const Page = () => {
       return error;
     }
   };
-  if (!user) alert("נתיב האלה");
 
   return (
     <div>
@@ -30,7 +29,7 @@ const Page = () => {
       </button>
       <h2>שנה סיסמא</h2>
       <ChangePassword />
-      {user && (
+      {user ? (
         <>
           <h2>פרופיל</h2>
           <InlineEdit
@@ -54,6 +53,8 @@ const Page = () => {
             field="clients_email"
           />
         </>
+      ) : (
+        <p>נתיב האלה</p>
       )}
     </div>
   );
