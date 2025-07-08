@@ -1,13 +1,13 @@
 "use client";
 
 // import { useEffect } from "react";
-import supabaseBrowserClient from "../clients/supabaseBrowserClient";
-import { useRouter } from "next/navigation";
+// import supabaseBrowserClient from "../clients/supabaseBrowserClient";
+// import { useRouter } from "next/navigation";
 
-const useAuthRedirect = () => {
-  const router = useRouter();
-  const supabase = supabaseBrowserClient();
-  if (router && supabase) alert(`########`);
+export default function useAuthRedirect() {
+  // const router = useRouter();
+  // const supabase = supabaseBrowserClient();
+  // if (router && supabase) alert(`########`);
   return "a";
 
   // useEffect(() => {
@@ -30,9 +30,8 @@ const useAuthRedirect = () => {
   //     alert(`>>>>>>>>>>>>>>>>>>>>> ${error} `);
   //   }
   // }, [router, supabase]);
-};
+}
 
-export default useAuthRedirect;
 // "use client";
 
 // import { useEffect, useState } from "react";
