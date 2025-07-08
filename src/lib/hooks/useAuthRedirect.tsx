@@ -27,6 +27,7 @@
 import { useEffect } from "react";
 import supabaseBrowserClient from "../clients/supabaseBrowserClient";
 import { useRouter } from "next/navigation";
+import { User } from "@supabase/supabase-js";
 
 const useAuthRedirect = () => {
   const router = useRouter();
@@ -43,7 +44,7 @@ const useAuthRedirect = () => {
           console.error("שגיאה בקבלת session:", sessionError);
         }
 
-        let user = sessionData?.session?.user;
+        let user: User | undefined | null = sessionData?.session?.user;
 
         // אם אין משתמש, מנסה לרענן session
         if (!user) {
