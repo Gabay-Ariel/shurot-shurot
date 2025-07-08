@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
 import { useEffect } from "react";
@@ -9,8 +10,6 @@ const useAuthRedirect = () => {
   const supabase = supabaseBrowserClient();
 
   useEffect(() => {
-    alert("דדד");
-
     (async () => {
       const {
         data: { user },
@@ -20,7 +19,7 @@ const useAuthRedirect = () => {
         router.replace("/admin");
       }
     })();
-  }, [router, supabase.auth]);
+  }, []);
 };
 
 export default useAuthRedirect;
