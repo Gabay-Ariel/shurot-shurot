@@ -1,23 +1,76 @@
+// "use client";
+
+// import supabaseBrowserClient from "../clients/supabaseBrowserClient";
+// // import { useRouter } from "next/navigation";
+
+// const useAuthRedirect = () => {
+//   // const router = useRouter();
+//   const supabase = supabaseBrowserClient();
+//   (async () => {
+//     const {
+//       data: { user },
+//       // error,
+//     } = await supabase.auth.getUser();
+//     if (!user) {
+//       // router.replace("/admin");
+//       console.log("ffffffff");
+//     } else {
+//       console.log("####");
+//     }
+//   })();
+// };
+
+// export default useAuthRedirect;
+
 "use client";
 
+import { useEffect } from "react";
 import supabaseBrowserClient from "../clients/supabaseBrowserClient";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 const useAuthRedirect = () => {
-  // const router = useRouter();
+  const router = useRouter();
   const supabase = supabaseBrowserClient();
-  (async () => {
-    const {
-      data: { user },
-      // error,
-    } = await supabase.auth.getUser();
-    if (!user) {
-      // router.replace("/admin");
-      console.log("ffffffff");
-    } else {
-      console.log("####");
-    }
-  })();
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        // מנסה להביא את ה-session הקיים
+        const { data: sessionData, error: sessionError } =
+          await supabase.auth.getSession();
+
+        if (sessionError) {
+          console.error("שגיאה בקבלת session:", sessionError);
+        }
+
+        let user = sessionData?.session?.user;
+
+        // אם אין משתמש, מנסה לרענן session
+        if (!user) {
+          console.log("לא נמצא session – מנסה לרענן...");
+          const { data: refreshed, error: refreshError } =
+            await supabase.auth.refreshSession();
+
+          if (refreshError) {
+            console.error("שגיאה ברענון session:", refreshError);
+          }
+
+          user = refreshed?.user;
+        }
+
+        if (!user) {
+          console.log("אין משתמש מחובר – מעביר ל-/admin");
+          router.replace("/admin");
+        } else {
+          console.log("משתמש מחובר:", user.email);
+        }
+      } catch (err) {
+        console.error("שגיאה כללית ב-checkUser:", err);
+      }
+    };
+
+    checkUser();
+  }, [router, supabase.auth]);
 };
 
 export default useAuthRedirect;
