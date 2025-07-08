@@ -1,5 +1,6 @@
 "use client";
 
+import ChangePassword from "@/lib/components/ChangePassword";
 import InlineEdit from "@/lib/components/InlineEdit";
 import useAuthRedirect from "@/lib/hooks/useAuthRedirect";
 import useSWRSignOut from "@/lib/hooks/useSWRSignOut";
@@ -26,6 +27,8 @@ const Page = () => {
       <button onClick={handleSignOut}>
         {isMutating ? "מתנתק..." : "התנתק"}
       </button>
+      <h2>שנה סיסמא</h2>
+      <ChangePassword />
       {user && (
         <>
           <h2>פרופיל</h2>
