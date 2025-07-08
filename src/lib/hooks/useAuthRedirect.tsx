@@ -15,10 +15,10 @@ export const useAuthRedirect = () => {
       (async () => {
         const {
           data: { user },
-          error,
+          // error,
         } = await supabase.auth.getUser();
 
-        if (!user || error) {
+        if (!user) {
           router.replace("/admin");
         }
       })();
