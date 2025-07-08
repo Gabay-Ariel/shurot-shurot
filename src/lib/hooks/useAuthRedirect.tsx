@@ -55,7 +55,7 @@ const useAuthRedirect = (): User | null => {
         listener.subscription.unsubscribe();
       };
     })();
-  }, [supabase.auth, router]);
+  }, [router]);
 
   return user;
 };

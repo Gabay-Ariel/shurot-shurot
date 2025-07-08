@@ -62,9 +62,9 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ message: "User updated successfully" });
-  } catch (error: any) {
+  } catch (error: unknown) {
     return NextResponse.json(
-      { error: error.message || "Unknown error" },
+      { error: error || "Unknown error" },
       { status: 500 }
     );
   }
