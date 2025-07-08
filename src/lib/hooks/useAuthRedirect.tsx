@@ -17,9 +17,9 @@ export const useAuthRedirect = () => {
       alert("USER: " + JSON.stringify(user));
       alert("ERROR: " + JSON.stringify(error));
 
-      if (!user || error) {
-        router.replace("/admin");
-      }
+      // if (!user || error) {
+      //   router.replace("/admin");
+      // }
     })();
   }, [router, supabase]);
 };
