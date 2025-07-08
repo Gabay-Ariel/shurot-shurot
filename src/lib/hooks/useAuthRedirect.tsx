@@ -1,25 +1,20 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 "use client";
 
-import { useEffect } from "react";
 import supabaseBrowserClient from "../clients/supabaseBrowserClient";
 import { useRouter } from "next/navigation";
 
 const useAuthRedirect = () => {
   const router = useRouter();
   const supabase = supabaseBrowserClient();
-
-  useEffect(() => {
-    (async () => {
-      const {
-        data: { user },
-        // error,
-      } = await supabase.auth.getUser();
-      if (!user) {
-        router.replace("/admin");
-      }
-    })();
-  }, []);
+  (async () => {
+    const {
+      data: { user },
+      // error,
+    } = await supabase.auth.getUser();
+    if (!user) {
+      router.replace("/admin");
+    }
+  })();
 };
 
 export default useAuthRedirect;
