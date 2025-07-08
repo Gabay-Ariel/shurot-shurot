@@ -1,42 +1,26 @@
 "use client";
 
 import { useEffect } from "react";
-// import supabaseBrowserClient from "../clients/supabaseBrowserClient";
-// import { useRouter } from "next/navigation";
+import supabaseBrowserClient from "../clients/supabaseBrowserClient";
+import { useRouter } from "next/navigation";
 
 const useAuthRedirect = () => {
-  // const router = useRouter();
-  // const supabase = supabaseBrowserClient();
+  const router = useRouter();
+  const supabase = supabaseBrowserClient();
 
   useEffect(() => {
     alert("דדד");
-    async function getPosts() {
-      try {
-        const response = await fetch(
-          "https://jsonplaceholder.typicode.com/posts"
-        );
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log(data); // מדפיס את המערך של הפוסטים
-      } catch (error) {
-        console.error("בעיה בקריאה ל-API:", error);
-      }
-    }
-    getPosts();
 
-    //   (async () => {
-    //     const {
-    //       data: { user },
-    //       // error,
-    //     } = await supabase.auth.getUser();
-    //     if (!user) {
-    //       router.replace("/admin");
-    //     }
-    //   })();
-    // }, [router, supabase.auth]);
-  }, []);
+    (async () => {
+      const {
+        data: { user },
+        // error,
+      } = await supabase.auth.getUser();
+      if (!user) {
+        router.replace("/admin");
+      }
+    })();
+  }, [router, supabase.auth]);
 };
 
 export default useAuthRedirect;
