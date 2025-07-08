@@ -9,17 +9,31 @@ export const useAuthRedirect = () => {
   const supabase = supabaseBrowserClient();
 
   useEffect(() => {
-    (async () => {
+    let isMounted = true;
+    const checkUser = async () => {
       const {
         data: { user },
         error,
       } = await supabase.auth.getUser();
-      alert("USER: " + JSON.stringify(user));
-      alert("ERROR: " + JSON.stringify(error));
 
-      // if (!user || error) {
-      //   router.replace("/admin");
-      // }
-    })();
+      if ((!user || error) && isMounted) {
+        router.replace("/admin");
+      }
+    };
+
+    checkUser();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        if (!session && isMounted) {
+          router.replace("/admin");
+        }
+      }
+    );
+
+    return () => {
+      isMounted = false;
+      authListener.subscription.unsubscribe();
+    };
   }, [router, supabase]);
 };
