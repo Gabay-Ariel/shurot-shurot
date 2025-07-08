@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+// import { useEffect } from "react";
 import supabaseBrowserClient from "../clients/supabaseBrowserClient";
 import { useRouter } from "next/navigation";
 
