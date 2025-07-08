@@ -1,24 +1,18 @@
-// src/lib/hooks/useSWRUpdateUser.ts
+import axios from "axios";
 import useSWRMutation from "swr/mutation";
+import { UpdateAdminArgs } from "../types/auth";
 
-export type UpdateUserArgs =
-  | { password: string; metadata?: never }
-  | { metadata: Record<string, any>; password?: never };
+const updateAdminFetcher = async (
+  url: string,
+  { arg }: { arg: UpdateAdminArgs }
+) => {
+  const response = await axios.put(url, arg, {
+    headers: { "Content-Type": "application/json" },
+  });
+  return response.data;
+};
 
-export function useSWRUpdateAdmin() {
-  return useSWRMutation(
-    "/api/auth/update",
-    async (_key, { arg }: { arg: UpdateUserArgs }) => {
-      const res = await fetch("/api/auth/updateAdmin", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(arg),
-      });
+const useSWRUpdateAdmin = () =>
+  useSWRMutation("/api/auth/updateAdmin", updateAdminFetcher);
 
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Update failed");
-
-      return data;
-    }
-  );
-}
+export default useSWRUpdateAdmin;

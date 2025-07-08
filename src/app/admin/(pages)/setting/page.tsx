@@ -44,6 +44,11 @@ const Page = () => {
             defaultValue={user.user_metadata.phone_number}
             field="phone_number"
           />
+          <InlineEdit
+            label="אימייל לקוחות"
+            defaultValue={user.user_metadata.clients_email}
+            field="clients_email"
+          />
         </>
       )}
     </div>

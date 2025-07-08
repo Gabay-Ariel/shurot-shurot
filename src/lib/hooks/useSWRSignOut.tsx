@@ -4,7 +4,9 @@ import axios from "axios";
 import useSWRMutation from "swr/mutation";
 
 const signOutFetcher = async (url: string) => {
-  const response = await axios.post(url);
+  const response = await axios.post(url, {
+    headers: { "Content-Type": "application/json" },
+  });
   return response.data;
 };
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { ChangeEvent, useState } from "react";
-import { useSWRUpdateAdmin } from "../hooks/useSWRUpdateAdmin";
+import useSWRUpdateAdmin from "../hooks/useSWRUpdateAdmin";
 
 interface Props {
   label: string;
@@ -22,7 +22,7 @@ const InlineEdit = ({ label, defaultValue, field }: Props) => {
   const handleOK = async () => {
     try {
       await trigger({ metadata: { [field]: value } });
-      window.location.reload();
+      // window.location.reload();
     } catch (error) {
       alert(`${error} נכשל`);
       setValue(defaultValue);
