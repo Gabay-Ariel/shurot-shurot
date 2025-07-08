@@ -19,6 +19,7 @@ const Page = () => {
       return error;
     }
   };
+  if (!user) alert("נתיב האלה");
 
   return (
     <div>
