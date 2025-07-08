@@ -1,39 +1,113 @@
+// "use client";
+
+// import { useEffect } from "react";
+// import supabaseBrowserClient from "../clients/supabaseBrowserClient";
+// import { useRouter } from "next/navigation";
+
+// export const useAuthRedirect = () => {
+//   const router = useRouter();
+//   const supabase = supabaseBrowserClient();
+
+//   useEffect(() => {
+//     let isMounted = true;
+//     const checkUser = async () => {
+//       const {
+//         data: { user },
+//         error,
+//       } = await supabase.auth.getUser();
+
+//       if ((!user || error) && isMounted) {
+//         router.replace("/admin");
+//       }
+//     };
+
+//     checkUser();
+
+//     const { data: authListener } = supabase.auth.onAuthStateChange(
+//       (_event, session) => {
+//         if (!session && isMounted) {
+//           router.replace("/admin");
+//         }
+//       }
+//     );
+
+//     return () => {
+//       isMounted = false;
+//       authListener.subscription.unsubscribe();
+//     };
+//   }, [router, supabase]);
+// };
 "use client";
 
-import { useEffect } from "react";
-import supabaseBrowserClient from "../clients/supabaseBrowserClient";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import supabaseBrowserClient from "../clients/supabaseBrowserClient";
 
 export const useAuthRedirect = () => {
   const router = useRouter();
   const supabase = supabaseBrowserClient();
 
-  useEffect(() => {
-    let isMounted = true;
-    const checkUser = async () => {
-      const {
-        data: { user },
-        error,
-      } = await supabase.auth.getUser();
+  // מצב טעינה שיעזור לנו להציג UI מתאים בזמן בדיקת האימות
+  const [isLoadingAuth, setIsLoadingAuth] = useState(true);
 
-      if ((!user || error) && isMounted) {
+  useEffect(() => {
+    let isMounted = true; // דגל לוודא שהקומפוננטה עדיין מורכבת
+
+    const checkUserAuthentication = async () => {
+      console.log("useAuthRedirect: Starting authentication check.");
+
+      // נשתמש ב-getSession() שהוא מהיר יותר בצד לקוח ומשתמש ב-localStorage/cookies
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
+
+      if (error) {
+        console.error("useAuthRedirect: Error getting session:", error.message);
+      } else {
+        console.log("useAuthRedirect: Current session:", session);
+      }
+
+      // אם אין סשן פעיל או שיש שגיאה, ונמצאים במצב mounted, מפנים מחדש
+      if ((!session || error) && isMounted) {
+        console.log(
+          "useAuthRedirect: No active session or error. Redirecting to /admin."
+        );
         router.replace("/admin");
       }
+      setIsLoadingAuth(false); // סיימנו את בדיקת האימות הראשונית
     };
 
-    checkUser();
+    // הפעלת הבדיקה הראשונית עם טעינת הקומפוננטה
+    checkUserAuthentication();
 
+    // האזנה לשינויים במצב האימות (לוגין / לוגאוט)
     const { data: authListener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
+        console.log(
+          "useAuthRedirect: Auth state changed. Event:",
+          _event,
+          "Session:",
+          session
+        );
         if (!session && isMounted) {
+          console.log("useAuthRedirect: Session ended. Redirecting to /admin.");
           router.replace("/admin");
         }
+        setIsLoadingAuth(false); // ודא שמצב הטעינה מתעדכן גם בשינויי מצב
       }
     );
 
+    // פונקציית ניקוי (cleanup) של ה-useEffect
     return () => {
-      isMounted = false;
-      authListener.subscription.unsubscribe();
+      isMounted = false; // מסמנים שהקומפוננטה אינה מורכבת יותר
+      if (authListener?.subscription) {
+        authListener.subscription.unsubscribe(); // מנתקים את ה-listener
+        console.log("useAuthRedirect: Auth listener unsubscribed.");
+      }
     };
-  }, [router, supabase]);
+  }, [router, supabase]); // התלויות של ה-useEffect
+
+  // ההוק מחזיר את מצב הטעינה
+  return isLoadingAuth;
 };
