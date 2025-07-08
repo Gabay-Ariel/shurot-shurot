@@ -9,7 +9,23 @@ const useAuthRedirect = () => {
   // const supabase = supabaseBrowserClient();
 
   useEffect(() => {
-    alert("YYYYYYYYYYYYYYYYYYYYYY");
+    alert("דדד");
+    async function getPosts() {
+      try {
+        const response = await fetch(
+          "https://jsonplaceholder.typicode.com/posts"
+        );
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log(data); // מדפיס את המערך של הפוסטים
+      } catch (error) {
+        console.error("בעיה בקריאה ל-API:", error);
+      }
+    }
+    getPosts();
+
     //   (async () => {
     //     const {
     //       data: { user },
