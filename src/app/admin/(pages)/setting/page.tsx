@@ -1,11 +1,13 @@
 "use client";
 
+import useAuthRedirect from "@/lib/hooks/useAuthRedirect";
 import useSWRSignOut from "@/lib/hooks/useSWRSignOut";
 import { useRouter } from "next/navigation";
 
 const Page = () => {
   const { trigger, isMutating } = useSWRSignOut();
   const router = useRouter();
+  useAuthRedirect();
 
   const handleSignOut = async () => {
     try {
