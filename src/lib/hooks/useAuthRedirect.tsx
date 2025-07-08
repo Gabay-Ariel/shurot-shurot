@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import supabaseBrowserClient from "../clients/supabaseBrowserClient";
 import { useRouter } from "next/navigation";
 
-const useAuthRedirect = () => {
+export default function useAuthRedirect() {
+  // const useAuthRedirect = () => {
   const router = useRouter();
   const supabase = supabaseBrowserClient();
 
@@ -22,9 +23,9 @@ const useAuthRedirect = () => {
   }, [router, supabase]);
 
   return "a";
-};
+}
 
-export default useAuthRedirect;
+// export default useAuthRedirect;
 
 // "use client";
 
