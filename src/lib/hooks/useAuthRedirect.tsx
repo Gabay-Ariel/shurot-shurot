@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 const useAuthRedirect = () => {
   const router = useRouter();
   const supabase = supabaseBrowserClient();
+  alert("EEE");
   (async () => {
     const {
       data: { user },
