@@ -14,6 +14,9 @@ export const useAuthRedirect = () => {
         data: { user },
         error,
       } = await supabase.auth.getUser();
+      alert("USER: " + JSON.stringify(user));
+      alert("ERROR: " + JSON.stringify(error));
+
       if (!user || error) {
         router.replace("/admin");
       }
