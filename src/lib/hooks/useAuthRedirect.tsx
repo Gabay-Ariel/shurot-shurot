@@ -1,35 +1,25 @@
 "use client";
 
-// import { useEffect } from "react";
-// import supabaseBrowserClient from "../clients/supabaseBrowserClient";
-// import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import supabaseBrowserClient from "../clients/supabaseBrowserClient";
+import { useRouter } from "next/navigation";
 
 export default function useAuthRedirect() {
-  // const router = useRouter();
-  // const supabase = supabaseBrowserClient();
-  // if (router && supabase) alert(`########`);
-  return "a";
+  const router = useRouter();
+  const supabase = supabaseBrowserClient();
 
-  // useEffect(() => {
-  //   try {
-  //     (() => {
-  //       setTimeout(() => {
-  //         alert("!&!");
-  //       }, 2000);
+  useEffect(() => {
+    (async () => {
+      const {
+        data: { user },
+        // error,
+      } = await supabase.auth.getUser();
 
-  //       // const {
-  //       //   data: { user },
-  //       //   // error,
-  //       // } = await supabase.auth.getUser();
-
-  //       // if (!user) {
-  //       //   router.replace("/admin");
-  //       // }
-  //     })();
-  //   } catch (error) {
-  //     alert(`>>>>>>>>>>>>>>>>>>>>> ${error} `);
-  //   }
-  // }, [router, supabase]);
+      if (!user) {
+        router.replace("/admin");
+      }
+    })();
+  }, [router, supabase]);
 }
 
 // "use client";
