@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
-import { checkIsAuth } from "./app/server/checkIsAuth";
+import supabaseServerClient from "./lib/clients/supabaseServerClient";
 
 const middleware = async (request: NextRequest) => {
   const forbiddenPaths = ["/admin/home", "/admin/storage", "/admin/setting"];
@@ -8,7 +8,12 @@ const middleware = async (request: NextRequest) => {
     return NextResponse.next();
   } else {
     try {
-      const isAuth = await checkIsAuth();
+      const supabaseClient = await supabaseServerClient();
+      const {
+        data: { user },
+        error,
+      } = await supabaseClient.auth.getUser();
+      const isAuth = !error || !!user;
       if (isAuth) {
         return NextResponse.next();
       } else return NextResponse.redirect(new URL("/admin", request.url));

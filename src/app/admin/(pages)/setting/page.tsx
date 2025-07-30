@@ -1,30 +1,12 @@
 "use client";
 
-import useAuthRedirect from "@/lib/hooks/useAuthRedirect";
-import useSWRSignOut from "@/lib/hooks/useSWRSignOut";
-import { useRouter } from "next/navigation";
+import SignOut from "@/lib/views/SignOut";
 
 const Page = () => {
-  const { trigger, isMutating } = useSWRSignOut();
-  const router = useRouter();
-  useAuthRedirect();
-
-  const handleSignOut = async () => {
-    try {
-      await trigger();
-      router.replace("/admin");
-    } catch (error) {
-      return error;
-    }
-  };
-
   return (
     <div>
       <h1>הגדרות</h1>
-      <h2>התנתק</h2>
-      <button onClick={handleSignOut}>
-        {isMutating ? "מתנתק..." : "התנתק"}
-      </button>
+      <SignOut />
     </div>
   );
 };
