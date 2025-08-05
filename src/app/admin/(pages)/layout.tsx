@@ -1,3 +1,4 @@
+import HeaderProfile from "@/lib/components/HeaderProfile";
 import { ReactNode } from "react";
 
 interface Props {
@@ -7,7 +8,9 @@ interface Props {
 const Layout = async ({ children }: Props) => {
   return (
     <>
-      <p>ניהול</p>
+      <header>
+        <HeaderProfile />
+      </header>
       <main>{children}</main>
     </>
   );
