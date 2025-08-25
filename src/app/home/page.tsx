@@ -49,6 +49,7 @@ export default function Home() {
       {/* חלון הוידאו */}
       {selectedVideoId ? (
         <div className="mb-6">
+          <p>*****</p>
           <iframe
             width="100%"
             height="400"
@@ -56,6 +57,7 @@ export default function Home() {
             frameBorder="0"
             allowFullScreen
           ></iframe>
+          <p>*****</p>
         </div>
       ) : (
         <p>נתיב</p>
