@@ -29,8 +29,6 @@ export default function Home() {
 
   return (
     <main className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4">חיפוש יוטיוב</h1>
-
       {/* שורת חיפוש */}
       <div className="flex mb-4">
         <input
@@ -49,7 +47,7 @@ export default function Home() {
       </div>
 
       {/* חלון הוידאו */}
-      {selectedVideoId && (
+      {selectedVideoId ? (
         <div className="mb-6">
           <iframe
             width="100%"
@@ -59,6 +57,8 @@ export default function Home() {
             allowFullScreen
           ></iframe>
         </div>
+      ) : (
+        <p>נתיב</p>
       )}
 
       {/* תוצאות חיפוש */}
