@@ -25,7 +25,7 @@ export default function YouTubeSearchPage() {
       } else {
         setVideoId(data.videoId);
       }
-    } catch (err) {
+    } catch {
       setError("שגיאה בחיבור לשרת");
       setVideoId(null);
     } finally {
