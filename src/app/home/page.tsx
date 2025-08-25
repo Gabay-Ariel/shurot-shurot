@@ -1,5 +1,6 @@
 import Image from "next/image";
 
+// The Video and YouTubeResponse interfaces are correct.
 interface Video {
   id: { videoId: string };
   snippet: {
@@ -8,15 +9,11 @@ interface Video {
   };
 }
 
-interface SearchParams {
-  query?: string;
-}
-
 interface YouTubeResponse {
   items: Video[];
 }
 
-// פונקציה ל-fetch מה-YouTube API
+// This function is also correct.
 async function fetchYouTubeVideos(
   query: string,
   apiKey: string
@@ -36,77 +33,117 @@ async function fetchYouTubeVideos(
   return data.items;
 }
 
+// The main component with corrected prop types.
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams?: SearchParams;
+  // This is the corrected type for searchParams in the App Router.
+  searchParams?: { [key: string]: string | string[] | undefined };
 }) {
-  const query = searchParams?.query || "funny cats";
+  // Safely handle the query, ensuring it's a string.
+  const queryValue = searchParams?.query;
+  const query = Array.isArray(queryValue)
+    ? queryValue[0]
+    : queryValue || "funny cats";
+
   const apiKey = process.env.YOUTUBE_API_KEY;
 
   if (!apiKey) {
-    return <div>Missing YouTube API key</div>;
+    return (
+      <div className="text-center text-red-500">Missing YouTube API key</div>
+    );
   }
 
   let videos: Video[] = [];
   try {
-    videos = await fetchYouTubeVideos(query, apiKey);
+    // Ensure query is a string before passing to the fetch function.
+    if (typeof query === "string") {
+      videos = await fetchYouTubeVideos(query, apiKey);
+    }
   } catch (e) {
     console.error(e);
+    // Optionally, show an error message in the UI
+    return (
+      <div className="text-center text-red-500">Failed to fetch videos.</div>
+    );
   }
 
-  const selectedVideoId = videos[0]?.id.videoId || "HC3IcsvbxYU";
+  const selectedVideoId = videos[0]?.id.videoId || "HC3IcsvbxYU"; // Default video
 
   return (
-    <main className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-xl font-bold mb-4">חיפוש YouTube</h1>
+    <main className="p-6 max-w-4xl mx-auto bg-gray-50 min-h-screen">
+      <h1 className="text-2xl font-bold mb-4 text-center text-gray-800">
+        חיפוש YouTube
+      </h1>
 
-      {/* טופס חיפוש (GET) */}
-      <form method="get" className="flex mb-6">
+      {/* Search Form */}
+      <form method="get" className="flex mb-6 shadow-md rounded-lg">
         <input
           type="text"
           name="query"
           placeholder="הכנס מילת חיפוש..."
           defaultValue={query}
-          className="flex-1 p-2 border rounded-l"
+          className="flex-1 p-3 border border-gray-300 rounded-l-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          dir="rtl"
         />
-        <button type="submit" className="bg-blue-500 text-white px-4 rounded-r">
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-6 rounded-r-lg hover:bg-blue-700 transition-colors"
+        >
           חפש
         </button>
       </form>
 
-      {/* נגן הסרטון הראשי */}
-      <div className="mb-6">
-        <iframe
-          width="100%"
-          height="400"
-          src={`https://www.youtube.com/embed/${selectedVideoId}`}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-        ></iframe>
+      {/* Main Video Player */}
+      <div className="mb-8 shadow-lg rounded-lg overflow-hidden">
+        <div className="aspect-w-16 aspect-h-9">
+          <iframe
+            className="w-full h-full"
+            src={`https://www.youtube.com/embed/${selectedVideoId}`}
+            title="YouTube video player"
+            frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          ></iframe>
+        </div>
       </div>
 
-      {/* רשימת תוצאות */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {videos.map((item) => (
-          <div key={item.id.videoId} className="border rounded p-2">
-            <a
-              href={`https://www.youtube.com/watch?v=${item.id.videoId}`}
-              target="_blank"
-              rel="noopener noreferrer"
+      {/* Results List */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {videos.length > 0 ? (
+          videos.map((item) => (
+            <div
+              key={item.id.videoId}
+              className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow"
             >
-              <Image
-                src={item.snippet.thumbnails.medium.url}
-                alt={item.snippet.title}
-                width={item.snippet.thumbnails.medium.width}
-                height={item.snippet.thumbnails.medium.height}
-                className="rounded mb-2"
-              />
-              <p className="text-sm font-semibold">{item.snippet.title}</p>
-            </a>
-          </div>
-        ))}
+              <a
+                // This link will now change the main video player
+                href={`/?query=${encodeURIComponent(query)}&videoId=${
+                  item.id.videoId
+                }`}
+                // The target="_blank" is removed to allow same-page navigation
+              >
+                <div className="relative w-full h-auto mb-2">
+                  <Image
+                    src={item.snippet.thumbnails.medium.url}
+                    alt={item.snippet.title}
+                    width={item.snippet.thumbnails.medium.width}
+                    height={item.snippet.thumbnails.medium.height}
+                    className="rounded-md object-cover"
+                    layout="responsive"
+                  />
+                </div>
+                <p className="text-sm font-semibold text-gray-700" dir="rtl">
+                  {item.snippet.title}
+                </p>
+              </a>
+            </div>
+          ))
+        ) : (
+          <p className="text-center text-gray-500 col-span-full">
+            No videos found for "{query}".
+          </p>
+        )}
       </div>
     </main>
   );
