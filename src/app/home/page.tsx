@@ -36,7 +36,6 @@ const fetchYouTubeVideo = async (query: string): Promise<string | null> => {
   return data.items[0].id.videoId;
 };
 
-// ⚠️ אין להגדיר Props עם type אישי
 export default async function Home({
   searchParams,
 }: {
@@ -69,7 +68,7 @@ export default async function Home({
           allowFullScreen
         />
       ) : (
-        <p>לא נמצאו תוצאות עבור "{query}"</p>
+        <p>לא נמצאו תוצאות עבור &quot;{query}&quot;</p>
       )}
     </main>
   );
