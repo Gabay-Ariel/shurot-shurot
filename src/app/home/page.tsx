@@ -8,11 +8,15 @@ interface Video {
   };
 }
 
+interface SearchParams {
+  query?: string;
+}
+
 interface YouTubeResponse {
   items: Video[];
 }
 
-// פונקציה ל-fetch סרטוני YouTube
+// פונקציה ל-fetch מה-YouTube API
 async function fetchYouTubeVideos(
   query: string,
   apiKey: string
@@ -35,13 +39,14 @@ async function fetchYouTubeVideos(
 export default async function HomePage({
   searchParams,
 }: {
-  searchParams?: { query?: string };
+  searchParams?: SearchParams;
 }) {
-  const apiKey = process.env.YOUTUBE_API_KEY;
-  if (!apiKey) return <div>Missing YouTube API key</div>;
-
-  // קבלת שאילתא מה-URL (Server-side)
   const query = searchParams?.query || "funny cats";
+  const apiKey = process.env.YOUTUBE_API_KEY;
+
+  if (!apiKey) {
+    return <div>Missing YouTube API key</div>;
+  }
 
   let videos: Video[] = [];
   try {
@@ -50,19 +55,19 @@ export default async function HomePage({
     console.error(e);
   }
 
-  const selectedVideoId = videos[0]?.id.videoId || "HC3IcsvbxYU"; // fallback לסרטון חינמי
+  const selectedVideoId = videos[0]?.id.videoId || "HC3IcsvbxYU";
 
   return (
     <main className="p-6 max-w-4xl mx-auto">
       <h1 className="text-xl font-bold mb-4">חיפוש YouTube</h1>
 
-      {/* טופס חיפוש GET */}
+      {/* טופס חיפוש (GET) */}
       <form method="get" className="flex mb-6">
         <input
           type="text"
           name="query"
-          defaultValue={query}
           placeholder="הכנס מילת חיפוש..."
+          defaultValue={query}
           className="flex-1 p-2 border rounded-l"
         />
         <button type="submit" className="bg-blue-500 text-white px-4 rounded-r">
