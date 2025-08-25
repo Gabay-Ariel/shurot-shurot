@@ -1,6 +1,3 @@
-"use client";
-
-import { useState } from "react";
 import Image from "next/image";
 
 type Video = {
@@ -11,66 +8,66 @@ type Video = {
   };
 };
 
-export default function Home() {
-  const [query, setQuery] = useState("");
-  const [results, setResults] = useState<Video[]>([]);
-  const [selectedVideoId, setSelectedVideoId] = useState<string | null>(null);
+// פונקציה שמבצעת חיפוש ל־YouTube API בצד שרת
+async function searchVideos(query: string): Promise<Video[]> {
+  if (!query) return [];
 
-  const searchVideos = async () => {
-    if (!query) return;
+  const res = await fetch(
+    `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=10&q=${encodeURIComponent(
+      query
+    )}&key=${process.env.YOUTUBE_API_KEY}`,
+    { cache: "no-store" } // כדי שלא יטען מה-cache
+  );
 
-    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-    const data = await res.json();
-    setResults(data.items);
-    if (data.items.length > 0) {
-      setSelectedVideoId(data.items[0].id.videoId);
-    }
-  };
+  const data = await res.json();
+  return data.items;
+}
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: { query?: string };
+}) {
+  const query = searchParams?.query || "";
+  const results = query ? await searchVideos(query) : [];
+  const selectedVideoId = results.length > 0 ? results[0].id.videoId : null;
 
   return (
     <main className="p-6 max-w-4xl mx-auto">
       {/* שורת חיפוש */}
-      <div className="flex mb-4">
+      <form className="flex mb-4" method="GET">
         <input
           type="text"
+          name="query"
           placeholder="הכנס מילת חיפוש..."
           className="flex-1 p-2 border rounded-l"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          defaultValue={query}
         />
-        <button
-          onClick={searchVideos}
-          className="bg-blue-500 text-white px-4 rounded-r"
-        >
+        <button type="submit" className="bg-blue-500 text-white px-4 rounded-r">
           חפש
         </button>
-      </div>
+      </form>
 
       {/* חלון הוידאו */}
       {selectedVideoId ? (
         <div className="mb-6">
-          <p>*****</p>
           <iframe
             width="100%"
             height="400"
             src={`https://www.youtube.com/embed/${selectedVideoId}`}
             frameBorder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           ></iframe>
-          <p>*****</p>
         </div>
       ) : (
-        <p>נתיב</p>
+        <p>חפש סרטון כדי להציג כאן</p>
       )}
 
       {/* תוצאות חיפוש */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {results.map((item) => (
-          <div
-            key={item.id.videoId}
-            className="cursor-pointer border rounded p-2 hover:bg-gray-100"
-            onClick={() => setSelectedVideoId(item.id.videoId)}
-          >
+          <div key={item.id.videoId} className="border rounded p-2">
             <Image
               src={item.snippet.thumbnails.medium.url}
               alt={item.snippet.title}
