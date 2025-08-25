@@ -1,9 +1,5 @@
-// app/(pages)/search/page.tsx
+// src/app/home/page.tsx
 import React from "react";
-
-type Props = {
-  searchParams: { q?: string };
-};
 
 type YouTubeApiItem = {
   id: { videoId: string };
@@ -20,7 +16,7 @@ type YouTubeApiResponse = {
 const fetchYouTubeVideo = async (query: string): Promise<string | null> => {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
-    throw new Error("YOUTUBE_API_KEY is not defined in environment variables");
+    throw new Error("YOUTUBE_API_KEY is not defined");
   }
 
   const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(
@@ -40,8 +36,13 @@ const fetchYouTubeVideo = async (query: string): Promise<string | null> => {
   return data.items[0].id.videoId;
 };
 
-export default async function SearchPage({ searchParams }: Props) {
-  const query = searchParams.q || "";
+// ⚠️ אין להגדיר Props עם type אישי
+export default async function Home({
+  searchParams,
+}: {
+  searchParams?: { q?: string };
+}) {
+  const query = searchParams?.q || "";
 
   if (!query) {
     return (
@@ -68,7 +69,7 @@ export default async function SearchPage({ searchParams }: Props) {
           allowFullScreen
         />
       ) : (
-        <p>לא נמצאו תוצאות עבור {query}</p>
+        <p>לא נמצאו תוצאות עבור "{query}"</p>
       )}
     </main>
   );
