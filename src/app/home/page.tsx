@@ -1,4 +1,3 @@
-// src/app/home/page.tsx
 import React from "react";
 
 type YouTubeApiItem = {
@@ -16,7 +15,7 @@ type YouTubeApiResponse = {
 const fetchYouTubeVideo = async (query: string): Promise<string | null> => {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
-    throw new Error("YOUTUBE_API_KEY is not defined");
+    throw new Error("YOUTUBE_API_KEY is not defined in environment variables");
   }
 
   const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=1&q=${encodeURIComponent(
@@ -36,10 +35,11 @@ const fetchYouTubeVideo = async (query: string): Promise<string | null> => {
   return data.items[0].id.videoId;
 };
 
+// ⚠️ אין להגדיר Props עם type אישי, פשוט תואם ל־App Router
 export default async function Home({
   searchParams,
 }: {
-  searchParams?: { q?: string };
+  searchParams?: Record<string, string | undefined>;
 }) {
   const query = searchParams?.q || "";
 
