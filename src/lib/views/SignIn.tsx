@@ -3,30 +3,37 @@
 import { FormEvent, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import useSWRMutation from "swr/mutation";
-import signInFetcher from "@/lib/services/signInFetcher";
+import signInFetcher from "../services/adminAuth/signInFetcher";
+import supabaseBrowserClient from "../clients/supabaseBrowserClient";
+import { useAtomValue, useSetAtom } from "jotai";
+import { adminAutoAtom } from "../atoms/adminAuto";
+import { Admin } from "../types/admin";
 
 const SignIn = () => {
   const router = useRouter();
+  const supabase = supabaseBrowserClient();
   const { trigger, isMutating, data, error } = useSWRMutation(
-    "/api/auth/sign-in",
+    "/api/admin-auth/sign-in",
     signInFetcher
   );
+
+  const setAdminAuto = useSetAtom(adminAutoAtom);
+  const aa = useAtomValue(adminAutoAtom);
+  useEffect(() => {
+    console.log({ aa });
+  }, [aa]);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    if (!isMutating) {
-      trigger({ email, password });
-    }
+    if (!isMutating) trigger({ email, password });
   };
 
   useEffect(() => {
-    if (!!data && !error) {
-      router.push("/admin/home");
-    } else if (error) alert(error.response.data.message);
-  }, [data, error, router]);
+    if (error) alert(error.response.data.message);
+  }, [error, router]);
 
   return (
     <form onSubmit={handleSubmit}>

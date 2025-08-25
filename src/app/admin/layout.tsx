@@ -8,7 +8,8 @@ interface Props {
 const Layout = async ({ children }: Props) => {
   return (
     <>
-      <header>
+      <header style={{ backgroundColor: "beige" }}>
+        <h1>ניהול אתר שורות שורות</h1>
         <HeaderProfile />
       </header>
       <main>{children}</main>

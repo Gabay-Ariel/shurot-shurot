@@ -1,7 +1,8 @@
 "use client";
 
-import { ChangeEvent, useState } from "react";
-import useSWRUpdateAdmin from "../hooks/useSWRUpdateAdmin";
+import { ChangeEvent, useEffect, useState } from "react";
+import editDetailsFetcher from "../services/adminAuth/editDetailsFetcher";
+import useSWRMutation from "swr/mutation";
 
 interface Props {
   label: string;
@@ -10,7 +11,11 @@ interface Props {
 }
 
 const InlineEdit = ({ label, defaultValue, field }: Props) => {
-  const { trigger, isMutating } = useSWRUpdateAdmin();
+  const { trigger, isMutating, data, error } = useSWRMutation(
+    "/api/admin-auth/edit-details",
+    editDetailsFetcher
+  );
+
   const [value, setValue] = useState<string>(defaultValue);
   const [isEditing, setIsEditing] = useState<boolean>(false);
 
@@ -19,14 +24,8 @@ const InlineEdit = ({ label, defaultValue, field }: Props) => {
 
   const handleEdit = () => setIsEditing(true);
 
-  const handleOK = async () => {
-    try {
-      await trigger({ metadata: { [field]: value } });
-      // window.location.reload();
-    } catch (error) {
-      alert(`${error} נכשל`);
-      setValue(defaultValue);
-    }
+  const handleOK = () => {
+    if (!isMutating) trigger({ metadata: { [field]: value } });
     setIsEditing(false);
   };
 
@@ -34,6 +33,12 @@ const InlineEdit = ({ label, defaultValue, field }: Props) => {
     setIsEditing(false);
     setValue(defaultValue);
   };
+
+  useEffect(() => {
+    if (!!data && !error) {
+      alert("שונה בהצלחה!");
+    } else if (error) alert("השינוי נכשל. " + error.response.data.message);
+  }, [data, error]);
 
   return (
     <div style={{ border: "1px solid black" }}>

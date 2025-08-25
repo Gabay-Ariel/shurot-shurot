@@ -1,4 +1,5 @@
 import NavigateButton from "@/lib/components/NavigateButton";
+import "./globals.css";
 
 const Page = () => {
   return (
